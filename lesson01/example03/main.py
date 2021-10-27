@@ -1,3 +1,5 @@
+import sys
+
 def eggs_whit_bacon():
     print('eggs with bacon')
     recipe_ingredients = {
@@ -12,6 +14,29 @@ def eggs_whit_bacon():
     prepare_ingridients(recipe_ingredients)
     putting_prepared_ingredient_on_the_pan('bacon')
     frying_on_a_pan('bacon', recipe_times['bacon'])
+    putting_prepared_ingredient_on_the_pan('eggs')
+    frying_on_a_pan('eggs', recipe_times['eggs'])
+    ready()
+
+def eggs_whit_bacon_and_onion():
+    print('eggs with bacon and onion')
+    recipe_ingredients = {
+        'bacon': 1,
+        'eggs': 4,
+        'onion': 1,
+    }
+    recipe_times = {
+        'bacon': 3,
+        'eggs': 4,
+        'onion': 2,
+    }
+    pull_out_of_the_refrigerator(recipe_ingredients)
+    prepare_ingridients(recipe_ingredients)
+    putting_prepared_ingredient_on_the_pan('onion')
+    frying_on_a_pan('onion', recipe_times['onion'])
+    putting_prepared_ingredient_on_the_pan('bacon')
+    frying_on_a_pan('bacon', recipe_times['bacon'])
+    putting_prepared_ingredient_on_the_pan('eggs')
     frying_on_a_pan('eggs', recipe_times['eggs'])
     ready()
 
@@ -29,6 +54,7 @@ def eggs_whit_onion():
     prepare_ingridients(recipe_ingredients)
     putting_prepared_ingredient_on_the_pan('onion')
     frying_on_a_pan('onion', recipe_times['onion'])
+    putting_prepared_ingredient_on_the_pan('eggs')
     frying_on_a_pan('eggs', recipe_times['eggs'])
     ready()
 
@@ -56,11 +82,18 @@ if __name__ == '__main__':
     print('Available recipes:')
     print('1 - eggs with bacon')
     print('2 - eggs with onion')
-    recipe_number = int(input())
+    print('3 - eggs with bacon and onion')
+    try:
+        recipe_number = int(input())
+    except ValueError:
+        print('Wrong value')
+        sys.exit()
 
     if recipe_number == 1:
         eggs_whit_bacon()
     elif recipe_number == 2:
         eggs_whit_onion()
+    elif recipe_number == 3:
+        eggs_whit_bacon_and_onion()
     else:
         print('Unknow recipe')
