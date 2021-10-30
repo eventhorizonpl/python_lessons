@@ -3,7 +3,7 @@ import argparse
 class CesarS():
     shift = 0
 
-    def __init__(self, shift = '5'):
+    def __init__(self, shift = 5):
         self.shift = shift
 
     def decrypt(self, input):
