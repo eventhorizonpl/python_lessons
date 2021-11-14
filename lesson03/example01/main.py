@@ -23,10 +23,10 @@ class Person():
         self.last_name = last_name
 
 class Benefactor(Person):
-    pass
+    kyc_pass = False
 
 class Beneficiary(Person):
-    pass
+    high_risk = False
 
 class Bank():
     benefactors = []
