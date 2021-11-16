@@ -28,7 +28,34 @@ class Benefactor(Person):
 class Beneficiary(Person):
     high_risk = False
 
+class PersonService():
+    def get_person_address_data(self):
+        print('First name:')
+        first_name = input()
+        print('Last name:')
+        last_name = input()
+        print('Birth date:')
+        birth_date = input()
+        print('Street:')
+        street = input()
+        print('Post code:')
+        post_code = input()
+        print('City:')
+        city = input()
+
+        return first_name, last_name, birth_date, street, post_code, city
+
+class BenefactorService(PersonService):
+    def create(self):
+        print('=== Create benefactor ===')
+        first_name, last_name, birth_date, street, post_code, city = self.get_person_address_data()
+        address = Address(city, post_code, street)
+        benefactor = Benefactor(address, birth_date, first_name, last_name)
+
+        return benefactor
+
 class Bank():
+    benefactor_service = BenefactorService()
     benefactors = []
     beneficiaries = []
     name = ''
@@ -49,21 +76,7 @@ class Bank():
             print('Wrong option')
 
     def create_benefactor(self):
-        print('=== Create benefactor ===')
-        print('First name:')
-        first_name = input()
-        print('Last name:')
-        last_name = input()
-        print('Birth date:')
-        birth_date = input()
-        print('Street:')
-        street = input()
-        print('Post code:')
-        post_code = input()
-        print('City:')
-        city = input()
-        address = Address(city, post_code, street)
-        benefactor = Benefactor(address, birth_date, first_name, last_name)
+        benefactor = self.benefactor_service.create()
         self.benefactors.append(benefactor)
         self.list_benefactors()
 
