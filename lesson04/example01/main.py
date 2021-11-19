@@ -21,6 +21,17 @@ class Game():
         menu.add.button('Back to main menu', self.main_menu)
         menu.mainloop(self.surface)
 
+    def text_input_test(self) -> None:
+        menu = pygame_menu.Menu(
+            height=600,
+            theme=pygame_menu.themes.THEME_DARK,
+            title='Text input test',
+            width=800
+        )
+        test = menu.add.text_input('Name: ', default='Test', maxchar=10)
+        menu.add.button('Back to main menu', self.main_menu)
+        menu.mainloop(self.surface)
+
     def selector_test(self) -> None:
         menu = pygame_menu.Menu(
             height=600,
@@ -32,7 +43,7 @@ class Game():
         menu.add.button('Back to main menu', self.main_menu)
         menu.mainloop(self.surface)
 
-    def main_menu(self):
+    def main_menu(self) -> None:
         menu = pygame_menu.Menu(
             height=600,
             theme=pygame_menu.themes.THEME_BLUE,
@@ -40,13 +51,13 @@ class Game():
             width=800
         )
 
-        user_name = menu.add.text_input('Name: ', default='John Doe', maxchar=10)
         menu.add.button('Button test', self.button_test)
+        menu.add.button('Text input test', self.text_input_test)
         menu.add.button('Selector test', self.selector_test)
         menu.add.button('Quit', pygame_menu.events.EXIT)
         menu.mainloop(self.surface)
 
-    def run(self):
+    def run(self) -> None:
         self.main_menu()
 
 if __name__ == '__main__':
