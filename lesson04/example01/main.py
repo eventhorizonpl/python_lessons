@@ -6,7 +6,7 @@ class Game():
     surface = None
 
     def __init__(self):
-        self.surface = create_example_window('Example - Simple', (800, 600))
+        self.surface = create_example_window('Window', (800, 600))
 
     def set_difficulty(self, selected: Tuple, value: Any) -> None:
         print(f'Set difficulty to {selected[0]} ({value})')
