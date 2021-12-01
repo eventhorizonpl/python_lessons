@@ -6,7 +6,7 @@ class Game():
     surface = None
 
     def __init__(self):
-        self.surface = create_example_window('Window', (800, 600))
+        self.surface = create_example_window('Test window', (800, 600))
 
     def set_difficulty(self, selected: Tuple, value: Any) -> None:
         print(f'Set difficulty to {selected[0]} ({value})')
@@ -18,6 +18,30 @@ class Game():
             title='Button test',
             width=800
         )
+        menu.add.button('Back to main menu', self.main_menu)
+        menu.mainloop(self.surface)
+
+    def label_test(self) -> None:
+        menu = pygame_menu.Menu(
+            height=600,
+            theme=pygame_menu.themes.THEME_BLUE,
+            title='Label test',
+            width=800
+        )
+        menu.add.label('Test label')
+        menu.add.label('Test label 2')
+        menu.add.label('Test label 3')
+        menu.add.button('Back to main menu', self.main_menu)
+        menu.mainloop(self.surface)
+
+    def progress_bar_test(self) -> None:
+        menu = pygame_menu.Menu(
+            height=600,
+            theme=pygame_menu.themes.THEME_BLUE,
+            title='Progress bar test',
+            width=800
+        )
+        menu.add.progress_bar('Test progress bar')
         menu.add.button('Back to main menu', self.main_menu)
         menu.mainloop(self.surface)
 
@@ -52,6 +76,8 @@ class Game():
         )
 
         menu.add.button('Button test', self.button_test)
+        menu.add.button('Label test', self.label_test)
+        menu.add.button('ProgressBar test', self.progress_bar_test)
         menu.add.button('Text input test', self.text_input_test)
         menu.add.button('Selector test', self.selector_test)
         menu.add.button('Quit', pygame_menu.events.EXIT)

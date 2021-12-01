@@ -52,7 +52,7 @@ class BankUi():
 
     def __init__(self):
         self.bank = Bank('MyBank')
-        self.surface = create_example_window('Bank', (800, 600))
+        self.surface = create_example_window('Bank', (1200, 600))
 
     def benefactors_create_action(self, first_name: str, last_name: str, birth_date: str, street: str, post_code: str, city: str) -> None:
         benefactor = self.bank.benefactor_service.create(first_name, last_name, birth_date, street, post_code, city)
@@ -60,45 +60,39 @@ class BankUi():
         self.benefactors_list_view()
 
     def benefactors_create_view(self) -> None:
-        menu = pygame_menu.Menu(
-            height=600,
-            theme=pygame_menu.themes.THEME_SOLARIZED,
-            title='Create benefactor',
-            width=800
-        )
+        menu = self.get_menu('Create benefactor')
         first_name = menu.add.text_input('First name: ', default='')
         last_name = menu.add.text_input('Last name: ', default='')
         birth_date = menu.add.text_input('Birth date: ', default='')
         street = menu.add.text_input('Street: ', default='')
         post_code = menu.add.text_input('Post code: ', default='')
         city = menu.add.text_input('City: ', default='')
-        menu.add.button('Create', self.benefactors_create_action, first_name, last_name, birth_date, street, post_code, city)
+        menu.add.button('Create', self.benefactors_create_action, first_name.get_value(), last_name.get_value(), birth_date.get_value(), street.get_value(), post_code.get_value(), city.get_value())
         menu.add.button('Back to Benefactors', self.benefactors_list_view)
         menu.mainloop(self.surface)
 
     def benefactors_list_view(self) -> None:
-        menu = pygame_menu.Menu(
-            height=600,
-            theme=pygame_menu.themes.THEME_SOLARIZED,
-            title='Benefactors',
-            width=800
-        )
+        menu = self.get_menu('Benefactors')
         menu.add.button('Create', self.benefactors_create_view)
-        table = menu.add.table('table', background_color='white')
-        row = table.add_row(['First name', 'Last name', 'Street', 'Post code', 'City'], row_background_color='white', cell_align=pygame_menu.locals.ALIGN_CENTER)
+        table = menu.add.table('table', background_color=(239, 231, 211))
+        row = table.add_row(['First name', 'Last name', 'Street', 'Post code', 'City'], row_background_color=(239, 231, 211), cell_align=pygame_menu.locals.ALIGN_CENTER, cell_padding=[10, 10, 10, 10])
         for benefactor in self.bank.benefactors:
-            row = table.add_row([benefactor.first_name, benefactor.last_name, benefactor.address.street, benefactor.address.post_code, benefactor.address.city], row_background_color='white', cell_align=pygame_menu.locals.ALIGN_CENTER)
+            row = table.add_row([benefactor.first_name, benefactor.last_name, benefactor.address.street, benefactor.address.post_code, benefactor.address.city], row_background_color=(239, 231, 211), cell_align=pygame_menu.locals.ALIGN_CENTER, cell_padding=[10, 10, 10, 10])
         menu.add.button('Back to main menu', self.main_menu)
         menu.mainloop(self.surface)
 
-    def main_menu(self) -> None:
+    def get_menu(self, title: str) -> pygame_menu.Menu:
         menu = pygame_menu.Menu(
             height=600,
             theme=pygame_menu.themes.THEME_SOLARIZED,
-            title=str('Welcome to ' + self.bank.name),
-            width=800
+            title=title,
+            width=1200
         )
 
+        return menu
+
+    def main_menu(self) -> None:
+        menu = self.get_menu(str('Welcome to ' + self.bank.name))
         menu.add.button('Benefactors', self.benefactors_list_view)
         menu.add.button('Quit', pygame_menu.events.EXIT)
         menu.mainloop(self.surface)
