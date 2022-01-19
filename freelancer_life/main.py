@@ -158,6 +158,7 @@ class Game():
         theme_bg_image.background_color = pygame_menu.BaseImage(
             image_path='room.png'
         )
+        theme_bg_image.background_color.set_alpha(192)
         menu = pygame_menu.Menu(
             height=600,
             theme=theme_bg_image,
