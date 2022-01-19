@@ -154,9 +154,13 @@ class Game():
         if title == '':
             title = self.title
 
+        theme_bg_image = self.theme.copy()
+        theme_bg_image.background_color = pygame_menu.BaseImage(
+            image_path='room.png'
+        )
         menu = pygame_menu.Menu(
             height=600,
-            theme=self.theme,
+            theme=theme_bg_image,
             title=title,
             width=800
         )
@@ -191,7 +195,7 @@ class Game():
         progress_thread.start()
         menu.mainloop(self.surface)
 
-    def progress_screen_motion(self, button, hours, progress_bar) -> None:
+    def progress_screen_motion(self, button: pygame_menu.widgets.Button, hours: int, progress_bar: pygame_menu.widgets.ProgressBar) -> None:
         n = int(100 / hours)
         for i in range(0, 110, n):
             if i <= 100:
