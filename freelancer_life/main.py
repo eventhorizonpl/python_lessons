@@ -1,7 +1,21 @@
-import pygame, pygame_menu, threading, time
+from random import randrange
+from types import NoneType
+import pygame, pygame_menu, random, threading, time
 from enum import auto, Enum
 from pygame_menu.examples import create_example_window
 from typing import Tuple, Any
+
+class Job():
+    hours = 0
+    salary = 0
+    title = ''
+    skills = []
+
+    def __init__(self, hours: int, salary: int, title: str, skills: list) -> None:
+        self.hours = hours
+        self.salary = salary
+        self.title = title
+        self.skills = skills
 
 class EducationalResource():
     price = 0
@@ -114,6 +128,13 @@ class Game():
             if not skill_found:
                 self.player.skills.append(skill)
 
+    def practice_skill(self, skill: Skill):
+        for player_skill in self.player.skills:
+            if player_skill.type == skill.type:
+                hours = 8
+                player_skill.hours += hours
+                self.progress_screen(hours)
+
     def buy_and_read_book(self, book: Book) -> None:
         if book.price <= self.player.money:
             self.player.money -= book.price
@@ -124,10 +145,66 @@ class Game():
                 hours += skill.hours
             self.progress_screen(hours)
 
+    def buy_and_take_online_course(self, course: Course) -> None:
+        if course.price <= self.player.money:
+            self.player.money -= course.price
+            self.add_player_skills(course.skills)
+            self.online_courses.courses.remove(course)
+            hours = 0
+            for skill in course.skills:
+                hours += skill.hours
+            self.progress_screen(hours)
+
+    def buy_and_take_school_course(self, course: Course) -> None:
+        if course.price <= self.player.money:
+            self.player.money -= course.price
+            self.add_player_skills(course.skills)
+            self.school_courses.courses.remove(course)
+            hours = 0
+            for skill in course.skills:
+                hours += skill.hours
+            self.progress_screen(hours)
+
     def buy_book_menu(self) -> None:
         menu = self.get_menu()
         for book in self.bookstore.books:
             menu.add.button(str(book.title + ' (' + str(book.price) + ')'), self.buy_and_read_book, book)
+        menu.add.button('Back', self.game_menu)
+        menu.mainloop(self.surface)
+
+    def take_online_course_menu(self) -> None:
+        menu = self.get_menu()
+        for course in self.online_courses.courses:
+            menu.add.button(str(course.title + ' (' + str(course.price) + ')'), self.buy_and_take_online_course, course)
+        menu.add.button('Back', self.game_menu)
+        menu.mainloop(self.surface)
+
+    def take_school_course_menu(self) -> None:
+        menu = self.get_menu()
+        for course in self.school_courses.courses:
+            menu.add.button(str(course.title + ' (' + str(course.price) + ')'), self.buy_and_take_school_course, course)
+        menu.add.button('Back', self.game_menu)
+        menu.mainloop(self.surface)
+
+    def take_job(self, job: Job) -> None:
+        self.player.money += job.salary
+        self.progress_screen(job.hours)
+
+    def search_for_job_menu(self) -> None:
+        jobs = []
+        for i in range(0, 5):
+            job_hours = randrange(20, 120)
+            salary = randrange(30, 100)
+            title = 'System reinstallation'
+            hours = randrange(50, 100)
+            level = randrange(1, 2)
+            type = random.choice(list(SkillType))
+            skill = Skill(hours, level, type)
+            job = Job(job_hours, salary, title, [skill])
+            jobs.append(job)
+        menu = self.get_menu('Search for job')
+        for job in jobs:
+            menu.add.button(str(job.title), self.take_job, job)
         menu.add.button('Back', self.game_menu)
         menu.mainloop(self.surface)
 
@@ -137,11 +214,9 @@ class Game():
         player_info.add_row(['Name:', self.player.name, 'Age:', str(self.player.age), 'Money:', str(self.player.money), 'Skills:', str(len(self.player.skills))], row_background_color=(228, 230, 246), cell_align=pygame_menu.locals.ALIGN_CENTER, cell_padding=[10, 10, 10, 10])
         menu.add.button('Learn', self.learn_menu)
         menu.add.button('Skills/practice', self.skills_menu)
+        menu.add.button('Search for job', self.search_for_job_menu)
         menu.add.button('Quit', pygame_menu.events.EXIT)
         menu.mainloop(self.surface)
-
-    def practice_skill(self, skill: Skill):
-        pass
 
     def skills_menu(self) -> None:
         menu = self.get_menu('Skills/practice')
@@ -155,10 +230,10 @@ class Game():
             title = self.title
 
         theme_bg_image = self.theme.copy()
-        theme_bg_image.background_color = pygame_menu.BaseImage(
-            image_path='room.png'
-        )
-        theme_bg_image.background_color.set_alpha(192)
+        #theme_bg_image.background_color = pygame_menu.BaseImage(
+        #    image_path='room.png'
+        #)
+        #theme_bg_image.background_color.set_alpha(192)
         menu = pygame_menu.Menu(
             height=600,
             theme=theme_bg_image,
@@ -171,6 +246,8 @@ class Game():
     def learn_menu(self) -> None:
         menu = self.get_menu()
         menu.add.button('Buy book', self.buy_book_menu)
+        menu.add.button('Take online course', self.take_online_course_menu)
+        menu.add.button('Take school course', self.take_school_course_menu)
         menu.add.button('Back', self.game_menu)
         menu.mainloop(self.surface)
 
@@ -197,7 +274,9 @@ class Game():
         menu.mainloop(self.surface)
 
     def progress_screen_motion(self, button: pygame_menu.widgets.Button, hours: int, progress_bar: pygame_menu.widgets.ProgressBar) -> None:
-        n = int(100 / hours)
+        n = int(round(100 / hours))
+        if n < 1:
+            n = 1
         for i in range(0, 110, n):
             if i <= 100:
                 progress_bar.set_value(i)
